@@ -2,7 +2,11 @@ module github.com/hymkor/skkjisyomt
 
 go 1.22.3
 
-require github.com/hymkor/csvi v1.9.2
+require (
+	github.com/hymkor/csvi v1.9.3
+	github.com/mattn/go-tty v0.0.5
+	github.com/nyaosorg/go-readline-ny v1.3.1
+)
 
 require (
 	github.com/atotto/clipboard v0.1.4 // indirect
@@ -11,9 +15,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
-	github.com/mattn/go-tty v0.0.5 // indirect
 	github.com/nyaosorg/go-box/v2 v2.2.1 // indirect
-	github.com/nyaosorg/go-readline-ny v1.3.1 // indirect
 	github.com/nyaosorg/go-readline-skk v0.3.1 // indirect
 	github.com/nyaosorg/go-windows-mbcs v0.4.2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
