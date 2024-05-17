@@ -3,7 +3,7 @@ module github.com/hymkor/skkjisyomt
 go 1.22.3
 
 require (
-	github.com/hymkor/csvi v1.9.3
+	github.com/hymkor/csvi v1.9.5
 	github.com/mattn/go-tty v0.0.5
 	github.com/nyaosorg/go-readline-ny v1.3.1
 )
