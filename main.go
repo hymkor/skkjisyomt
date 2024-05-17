@@ -24,13 +24,13 @@ func jisyoToTsv(r io.Reader, w io.Writer) error {
 		if err != nil && err != io.EOF {
 			return err
 		}
-		yomi, candidate, ok := bytes.Cut(line, []byte{' ','/'})
+		yomi, candidate, ok := bytes.Cut(line, []byte{' ', '/'})
 		if ok {
 			field := bytes.Split(candidate, []byte{'/'})
 			field[len(field)-2] = append(field[len(field)-2], field[len(field)-1]...)
 			field = field[:len(field)-1]
 			w.Write(yomi)
-			for _,f := range field{
+			for _, f := range field {
 				w.Write([]byte{'\t'})
 				w.Write(f)
 			}
@@ -54,7 +54,7 @@ func splitLineBreak(line []byte) ([]byte, []byte) {
 	return line, line[L:]
 }
 
-func saveAs(filename string, mode *uncsv.Mode, row *csvi.RowPtr) error {
+func saveAs(filename string, mode *uncsv.Mode, rows *csvi.Result) error {
 	newFd, err := os.Create(filename)
 	if err != nil {
 		return err
@@ -62,11 +62,11 @@ func saveAs(filename string, mode *uncsv.Mode, row *csvi.RowPtr) error {
 	defer newFd.Close()
 	w := bufio.NewWriter(newFd)
 	defer w.Flush()
-	for ; row != nil; row = row.Next() {
+	rows.Each(func(row *uncsv.Row) bool {
 		bin := row.Rebuild(mode)
 		if len(row.Cell) <= 1 {
 			w.Write(bin)
-			continue
+			return true
 		}
 		bin = bytes.Replace(bin, []byte{'\t'}, []byte{' ', '/'}, 1)
 		bin = bytes.ReplaceAll(bin, []byte{'\t'}, []byte{'/'})
@@ -75,7 +75,8 @@ func saveAs(filename string, mode *uncsv.Mode, row *csvi.RowPtr) error {
 		w.Write(text)
 		w.WriteByte('/')
 		w.Write(eol)
-	}
+		return true
+	})
 	return nil
 }
 
@@ -106,7 +107,6 @@ func mains(args []string) error {
 	if err != nil {
 		return err
 	}
-
 	fmt.Printf("Save as %s ? [y/n] ", args[0])
 	tty1, err := tty.Open()
 	if err != nil {
