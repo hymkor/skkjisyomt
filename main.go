@@ -20,20 +20,22 @@ import (
 func jisyoToTsv(r io.Reader, w io.Writer) error {
 	br := bufio.NewReader(r)
 	for {
-		line, err := br.ReadString('\n')
+		line, err := br.ReadSlice('\n')
 		if err != nil && err != io.EOF {
 			return err
 		}
-		yomi, candidate, ok := strings.Cut(line, " /")
+		yomi, candidate, ok := bytes.Cut(line, []byte{' ','/'})
 		if ok {
-			field := strings.Split(candidate, "/")
-			field[len(field)-2] += field[len(field)-1]
+			field := bytes.Split(candidate, []byte{'/'})
+			field[len(field)-2] = append(field[len(field)-2], field[len(field)-1]...)
 			field = field[:len(field)-1]
-			io.WriteString(w, yomi)
-			io.WriteString(w, "\t")
-			io.WriteString(w, strings.Join(field, "\t"))
+			w.Write(yomi)
+			for _,f := range field{
+				w.Write([]byte{'\t'})
+				w.Write(f)
+			}
 		} else {
-			io.WriteString(w, line)
+			w.Write(line)
 		}
 		if err == io.EOF {
 			return nil
