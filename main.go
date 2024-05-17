@@ -97,6 +97,7 @@ func mains(args []string) error {
 	cfg := &csvi.Config{
 		Mode:      &uncsv.Mode{Comma: '\t'},
 		CellWidth: 14,
+		FixColumn: true,
 	}
 	cfg.SetEncoding("EUC-JP")
 
